@@ -1,0 +1,24 @@
+Realizar un programa en MIPS que evalúe un polinio de tercer grado en un rango de
+enteros.
+Forma del polinomio  f(x) = ax^3 + bx^2 + cx + d
+
+Ejemplo:
+
+Valores de a,b,c,d (separados por retorno de carro) >
+-1.2
+2.3
+-3.4
+4.5
+
+Rango de enteros [r,s] (r,s € N y r <= s) >
+1
+10
+
+f(1) = 2.199999999981
+f(2) = -2.70000000076
+f(3) = -17.40000000343
+.
+.
+.
+f(10) = -999.50000000
+

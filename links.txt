@@ -1,0 +1,20 @@
+Links de interés
+
+MIPS mul div, and MIPS floating point instructions
+http://ww2.cs.fsu.edu/~dennis/teaching/2013_summer_cda3100/week5/week5-day2.pdf
+
+Floating Point Instructions
+https://www.doc.ic.ac.uk/lab/secondyear/spim/node20.html#:~:text=The%20MIPS%20has%20a%20floating,are%20required%20to%20hold%20doubles.
+
+5.3. The MIPS Register Files
+http://www.cs.uwm.edu/classes/cs315/Bacon/Lecture/HTML/ch05s03.html
+
+The MIPS Info Sheet (MIPS instructions)
+http://www.cs.tufts.edu/comp/140/lectures/Day_3/mips_summary.pdf
+
+MIPS Calling Convention
+https://courses.cs.washington.edu/courses/cse410/09sp/examples/MIPSCallingConventionsSummary.pdf
+
+MIPS System Calls in SPIM
+http://students.cs.tamu.edu/tanzir/csce350/reference/syscalls.html
+

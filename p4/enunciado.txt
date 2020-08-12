@@ -1,0 +1,47 @@
+Realizar programa en MIPS que dada una matriz insertada por teclado, permita invertir 
+el orden de los elementos en una fila o en una columna elegia por el usuario.
+
+Ejemplo: 
+
+
+filas > 2
+columnas > 2
+
+dato [1][1] > 11
+dato [1][2] > 12
+dato [2][1] > 21
+dato [2][2] > 22
+
+11  12
+21  22
+
+Opcion:
+<0>Salir
+<1>Inv fila
+<2>Inv columna
+> 1
+
+Fila[1,2] > 1
+
+12  11
+21  22
+
+Opcion:
+<0>Salir
+<1>Inv fila
+<2>Inv columna
+> 2
+
+Columna[1,2] > 2
+
+12  22
+21  11
+ 
+Opcion:
+<0>Salir
+<1>Inv fila
+<2>Inv columna
+> 0
+
+
+ 
