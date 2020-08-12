@@ -161,7 +161,7 @@ do1:
 
     move $s4,$v0
 
-
+    #Call Invertir Fila
 
 
   endop1:
@@ -192,6 +192,8 @@ do1:
     bgt $v0,$s1,doPedirCol
 
     move $s4,$v0
+
+      #Call Invertir columna 
 
   endop2:
 
