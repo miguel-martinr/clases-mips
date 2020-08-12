@@ -1,0 +1,10 @@
+Realizar un programa en MIPS que cuente el número de veces que aparece 
+una cifra en un número entero positivo.
+
+Ejemplo:
+
+Número > 1233345
+Cifra  > 3
+
+La cifra 3 se ha encontrado 3 veces
+

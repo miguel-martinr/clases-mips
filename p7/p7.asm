@@ -24,6 +24,7 @@ main:
 #$s0 <- noFilas
 #$s1 <- noColumnas
 
+
 do1:
   #Imprimir cadena
   li $v0,4
@@ -125,7 +126,7 @@ syscall
 
 
 
-#Divide entre dos y devuelve flotante
+#Divide entero entre dos y devuelve flotante
 #Parametros
 #$a1 <- entero 
 #Retorna
@@ -139,6 +140,19 @@ div_by_two:
 
 div_by_two_end:
 jr $ra
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #Devuelve la suma(float) de todos los valores de una matriz

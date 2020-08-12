@@ -13,10 +13,16 @@ int main(void) {
   };
 
   cout << "Practica 4. Trabajando con matrices\n";
+
+
+
+
+
   int selection;
 
 
   do {
+
     int i,j;
     for (i = 0; i < nrows; i++) {
       for (j = 0; j < ncols; j++) {
