@@ -106,6 +106,11 @@ endfor1:
 #$s4 <- f o c
 #$s5 <- aux
 
+
+
+
+
+
 do1:
 
 
@@ -133,9 +138,11 @@ do1:
 
   move $s3,$v0
 
+
+
   li $t0,2
   beq $s3,$t0,op2
-
+  beq $s3,$zero,endop2
 
   #1:Inv fila 
   op1:
@@ -162,14 +169,19 @@ do1:
     move $s4,$v0
 
     #Call Invertir Fila
-
+    #Cargamos argumentos 
+    move $a1,$s2 #Dir matriz
+    move $a2,$s4 #fila
+    move $a3,$s1 #noColumnas
+    jal InvRow
 
   endop1:
   j endop2
 
 
 
-  #2:Inv columna 
+  #2:Inv columna
+
   op2:
       #Pedir columna
     doPedirCol:
@@ -223,8 +235,15 @@ li $v0,10
 syscall
 
 
+
+
+
+
+
+
+
 #Imprime matriz
-#$a1 <- matriz
+#$a1 <- direccion de matriz
 #$a2 <- noFilas
 #$a3 <- noColumnas
 
@@ -232,7 +251,6 @@ syscall
 #$t0 <- i
 #$t1 <- j
 printMat:
-
   li $v0,4
   la $a0,saltoLinea
   syscall 
@@ -244,18 +262,19 @@ printMat:
     li $t1,0
     printMatFor2:
       bge $t1,$a3,printMatEndFor2
-      
+
       #Imprime numero
       li $v0,1
       lw $a0,0($a1)
       syscall 
-
+     
       #Imprime espacio
       li $v0,4
       la $a0,espacio
       syscall 
 
       addi $a1,4 
+
       addi $t1,1
       j printMatFor2
     printMatEndFor2:  
@@ -265,10 +284,70 @@ printMat:
     la $a0,saltoLinea
     syscall
 
+
     addi $t0,1
     j printMatFor1
   printMatEndFor1:
 
   jr $ra
+
+
+
+#Invierte fila
+#Argumentos 
+#$a1 <- direccion matriz (base)
+#$a2 <- fila
+#$a3 <- noColumnas
+
+#Variables locales
+#$t1 <- i (j)
+#$t2 <- (ncols-1)/2
+#$t3<- size
+#$t4 <- Primer elemento de la fila
+#$t5 <- Ultimo elemento de la fila
+InvRow:
+  lw $t3,size
+  addi $a2,$a2,-1
+
+  #Primer elemento de la fila
+  #first = (fila * ncols * size) + base	
+  mul $t4,$a2,$a3
+  mul $t4,$t4,$t3
+  add $t4,$t4,$a1
+
+
+  #Ultimo elemento de la fila
+  #last = first + (ncols-1) * size	
+  move $t5,$a3
+  addi $t5,-1
+  mul $t5,$t5,$t3
+  add $t5,$t4,$t5
+
+
+  #$t2 = (ncols-1)/2
+  addi $t2,$a3,-1
+  li $t0,2
+  div $t2,$t2,$t0
+  
+    
+  move $t1,$zero 
+  InvRowFor1:
+    bgt $t1,$t2,InvRowFor1End
+
+    lw $t6,0($t4)
+    lw $t7,0($t5)
+    sw $t7,0($t4)
+    sw $t6,0($t5)
+
+    addi $t4,4
+    addi $t5,-4
+
+
+    addi $t1,1
+    j InvRowFor1
+  InvRowFor1End: 
+
+jr $ra
+
 
 
