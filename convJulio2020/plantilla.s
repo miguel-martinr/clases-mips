@@ -19,9 +19,9 @@ laberinto:	.ascii "0######"
 			      .ascii "00##000"
 			      .ascii "#0##0##"
 			      .ascii "#0##0##"
-			      .ascii "#0000##"
-			      .ascii "#######"
-			      .ascii "#######"
+			      .ascii "#0##00#"
+			      .ascii "#0###0#"
+			      .ascii "#00000#"
 			
 costeh:		.asciiz "\nIntroduzca el coste del desplazamiento horizontal: "
 costev:		.asciiz "\nIntroduzca el coste del desplazamiento vertical: "
@@ -127,42 +127,110 @@ paso:
   addi $s3,-1 #j--
 
   
-  move $s4,$zero
 
-  #up
-  move $t0,$s2
-  addi $t0,-1
+  #up  i-1,j
+  move $t0,$s2 #$t0 = i
+  addi $t0,-1  #$t0_= i - 1
 
-  blt $t0,$zero,left
-    addi $s2,-1
-    move $a0,$s2
-    move $a1,$s3
-    lw $a2,size
-    move $a3,$s1
+  blt $t0,$zero,left #if (i - 1) < 0 then j left
+    move $a0,$t0 #$a0 = i-1
+    move $a1,$s3 #$a1 = j
+    move $a2,$s1 #$a2 = nCols
+    lw $a3,size  #$a3 = size
     jal calc_desp
 
-    add $v0,$v0,$s0
+    add $v0,$v0,$s0 #$v0 = &mat[i-1][j]
 
-    lb $v0,0($v0)
-    li $t0,libre
+    lb $v0,0($v0) #$v0 = mat[i-1][j]
+    li $t1,libre #$t1 = '0'
     
-    bne $v0,$t0,left
-      move $v0,$s2
-      addi $v0,1
-      move $v1,$s3
-      add $v1,1
-      li $s4,1
+    bne $v0,$t1,left #if mat[i-1][j] != '0' then j left
+      move $v0,$t0 #$v0 = i-1
+      move $v1,$s3 #$v0 = j
+      j paso_end
 
+  #left i,j-1
   left:
-  
-  bne $s4,$zero,paso_end
+    move $t0,$s3 #$t0 = j
+    addi $t0,-1 #$t0 = j - 1
+    blt $t0,$zero,right #if (j-1) < 0 then j right
+      move $a0,$s2 #$a0 = i
+      move $a1,$t0 #$a1 = j-1
+      move $a2,$s1 #$a2 = nCols
+      lw $a3,size
+      jal calc_desp
+      add $v0,$v0,$s0 # $v0 = &mat[i][j-1]
+      lb $v0,0($v0) #$v0 = mat[i][j-1]
+      li $t1,libre #$t1 = '0'
+
+      bne $v0,$t1,right
+        move $v0,$s2 #$v0 = i
+        move $v1,$t0 #$v1 = j-1
+        j paso_end
+
+  #right i,j+1
+  right:
+    move $t0,$s3 #$t0 = j
+    addi $t0,1 #$t0 = j + 1
+    bge $t0,$s1,down #if (j+1) >= nCols then j down
+      move $a0,$s2 #$a0 = i
+      move $a1,$t0 #$a1 = j+1
+      move $a2,$s1 #$a2 = nCols
+      lw $a3,size
+      jal calc_desp
+      add $v0,$v0,$s0 # $v0 = &mat[i][j+1]
+      lb $v0,0($v0) #$v0 = mat[i][j+1]
+      li $t1,libre #$t1 = '0'
+
+      bne $v0,$t1,down
+        move $v0,$s2 #$v0 = i
+        move $v1,$t0 #$v1 = j+1
+        j paso_end
 
 
+  #down i+1,j
+  down:
+    move $t0,$s2 #$t0 = i
+    addi $t0,1  #$t0_= i + 1
 
+    bge $t0,$s1,paso_end #if (i + 1) >= nCols then j paso_end
+      move $a0,$t0 #$a0 = i+1
+      move $a1,$s3 #$a1 = j
+      move $a2,$s1 #$a2 = nCols
+      lw $a3,size  #$a3 = size
+      jal calc_desp
 
+      add $v0,$v0,$s0 #$v0 = &mat[i+1][j]
 
+      lb $v0,0($v0) #$v0 = mat[i+1][j]
+      li $t1,libre #$t1 = '0'
+      
+      bne $v0,$t1,paso_end #if mat[i+1][j] != '0' then j left
+        move $v0,$t0 #$v0 = i+1
+        move $v1,$s3 #$v0 = j
+        j paso_end
 
 paso_end:
+
+
+  move $s2,$v0
+  move $s3,$v1
+  
+  move $a0,$v0
+  move $a1,$v1
+  move $a2,$s1
+  lw $a3,size
+  jal calc_desp
+
+  add $v0,$v0,$s0
+  li $s0,88
+  sb $s0,0($v0)
+
+  move $v0,$s2
+  move $v1,$s3
+  addi $v0,1
+  addi $v1,1
+
 
   lw $s0,0($sp)
   lw $s1,4($sp)
@@ -205,8 +273,130 @@ calc_desp:
 	
 # Desarrolla la funcion recorre_camino
 # ESPECIFICA AQUI LOS ARGUMENTOS DE ENTRADA Y SALIDA COMO COMENTARIOS
+#Argumentos
+#$a0 <- dir matriz
+#$a1 <- nFilas
+#$f12 <- costeH
+#$f14 <- costeV
+#Retorna
+#$f0 <- costeTotal
+
+#Variables locales
+#$s0 <- dir matriz
+#$s1 <- nFilas
+#$f20 <- costeH
+#$f22 <- costeV
+#$f24 <- costeTotal
+#$s2 <- oldPos[0]
+#$s3 <- oldPos[1]
+#$s4 <- newPos[0]
+#$s5 <- newPos[1]
+
 recorre_camino:
-	
+  
+  addi $sp,-52
+  sw $s0,0($sp)
+  sw $s1,4($sp)
+  s.d $f20,8($sp)
+  s.d $f22,16($sp)
+  sw $s2,24($sp)
+  sw $s3,28($sp)
+  sw $s4,32($sp)
+  sw $s5,36($sp)
+  s.d $f24,40($sp)
+  sw $ra,48($sp)
+
+#Variables locales
+#$s0 <- dir matriz
+#$s1 <- nFilas
+#$f20 <- costeH
+#$f22 <- costeV
+#$f24 <- costeTotal
+#$s2 <- oldPos[0]
+#$s3 <- oldPos[1]
+#$s4 <- newPos[0]
+#$s5 <- newPos[1]
+
+  move $s0,$a0 #dirMatriz
+  move $s1,$a1 #nFilas
+
+  mov.d $f20,$f12 #costeH
+  mov.d $f22,$f14 #costeV
+
+  li.d $f24,0.0
+
+  
+
+  li $a0,0
+  li $a1,0
+  move $a2,$s1
+  lw $a3,size
+  jal calc_desp
+
+  add $v0,$v0,$s0
+  li $t0,88
+  sb $t0,0($v0) #mat[0][0] = 'X'
+
+  li $s4,1
+  li $s5,1 #newPos = 1,1
+  
+  recorre_do:
+    move $s2,$s4
+    move $s3,$s5 #oldPos = newPos
+
+    move $a0,$s0
+    move $a1,$s1
+    move $a2,$s2
+    move $a3,$s3
+    jal paso
+
+    move $s4,$v0
+    move $s5,$v1
+
+    beq $s2,$s4,notV
+      add.d $f24,$f24,$f22
+    notV:
+
+    beq $s3,$s5,notH
+      add.d $f24,$f24,$f20
+    notH:
+
+    la $a1,laberinto
+    li $a2,lado
+    jal print_matriz
+
+  blt $s5,$s1,recorre_do
+
+
+  mov.d $f0,$f24
+  
+
+
+  lw $s0,0($sp)
+  lw $s1,4($sp)
+  l.d $f20,8($sp)
+  l.d $f22,16($sp)
+  lw $s2,24($sp)
+  lw $s3,28($sp)
+  lw $s4,32($sp)
+  lw $s5,36($sp)
+  l.d $f24,40($sp)
+  lw $ra,48($sp)
+  addi $sp,-52
+
+
+
+#Variables locales
+#$s0 <- dir matriz
+#$s1 <- nFilas
+#$f20 <- costeH
+#$f22 <- costeV
+#$f24 <- costeTotal
+#$s2 <- oldPos[0]
+#$s3 <- oldPos[1]
+#$s4 <- newPos[0]
+#$s5 <- newPos[1]
+  jr $ra
 
 # Desarrolla aqui el CUERPO PRINCIPAL DEL PROGRAMA				
 main:
@@ -217,12 +407,23 @@ main:
   li $a2,lado
   jal print_matriz
 
-  #Paso
+  #Argumentos
+#$a0 <- dir matriz
+#$a1 <- nFilas
+#$f12 <- costeH
+#$f14 <- costeV
+#Retorna
+#$f20 <- costeTotal
+
   la $a0,laberinto
   li $a1,lado
-  li $a2,2
-  li $a3,1
-  jal paso
+  li.d $f12,1.0
+  li.d $f14,1.0
+  jal recorre_camino
+
+  la $a1,laberinto
+  li $a2,lado
+  jal print_matriz
 
   li $v0,10
   syscall
