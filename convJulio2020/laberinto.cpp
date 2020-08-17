@@ -28,7 +28,7 @@ vector<int> paso(matrix &mat, int lado, int i, int j) {
   j--;
   bool solved = false;
 
-  mat[i][j] = 'X';
+
   //i-1,j  up
   if (i-1 >= 0) {
     if (mat[i-1][j] == '0') {
@@ -73,26 +73,30 @@ vector<int> paso(matrix &mat, int lado, int i, int j) {
 
 
 double recorrer_camino(matrix &mat, double costeH, double costeV) {
+
   double costeTotal = 0;
   vector<int> oldPos, newPos;
 
-  oldPos = {1,1};
-  newPos = paso(mat, mat.size(), oldPos[0], oldPos[1]);
+  mat[0][0] = 'X';
 
-  while (newPos[1] < mat.size()) {
+  
+  newPos = {1,1};
+  do {
     print(newPos);
     print_matriz(mat);
+    
+    oldPos = newPos;
+    newPos = paso(mat, mat.size(), oldPos[0], oldPos[1]);
+    
     //Vertical?
     if (oldPos[0] != newPos[0])
       costeTotal += costeV;
-      else 
+    if (oldPos[1] != newPos[1]) 
       costeTotal += costeH;
 
-    oldPos = newPos;
-    newPos = paso(mat, mat.size(), oldPos[0], oldPos[1]);
-  }
+  }  while (newPos[1] < mat.size());
 
-  mat[newPos[0]-1][newPos[1]-1] = 'X';
+
   print_matriz(mat);
   return costeTotal;
 }
