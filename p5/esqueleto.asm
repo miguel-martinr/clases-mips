@@ -55,7 +55,7 @@ reverse_r:  # funcion que da la vuelta a una cadena
         addi $sp,-4
         sw $ra,0($sp)
 
-
+        # Evaluamos caso base
         beq $a1,$zero,reverse_rr_end
         li $t0,1
         beq $a1,$t0,reverse_rr_end
@@ -64,18 +64,19 @@ reverse_r:  # funcion que da la vuelta a una cadena
 
         lb $t0,0($a0) # $t0(aux) = *str_
         
-        add $t2,$a0,$a1 
+        add $t2,$a0,$a1 # $t2 = str_ + length
         lb $t1,0($t2) # $t1 = *(str_ + length)
         sb $t1,0($a0) # *str_ = *(str_ + length)
 
-        beq $t0,$t1,is_pal
+        beq $t0,$t1,is_pal # if aux != *str_
           move $v0,$zero
         is_pal:
 
         sb $t0,0($t2) # *(str_ + length) = aux
 
-        addi $a0,1
-        addi $a1,-1
+        addi $a0,1 # str++
+        addi $a1,-1 # lentgh--
+        
         jal reverse_rr
 
       reverse_rr_end:
