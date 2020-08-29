@@ -309,6 +309,8 @@ InvRow:
   lw $t3,size
   addi $a2,$a2,-1
 
+  
+
   #Primer elemento de la fila
   #first = (fila * ncols * size) + base	
   mul $t4,$a2,$a3
@@ -336,6 +338,7 @@ InvRow:
 
     lw $t6,0($t4)
     lw $t7,0($t5)
+    
     sw $t7,0($t4)
     sw $t6,0($t5)
 

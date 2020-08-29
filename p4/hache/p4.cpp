@@ -23,33 +23,47 @@ int main(void) {
 
   do {
 
+
+    //Imprime matriz
     int i,j;
     for (i = 0; i < nrows; i++) {
+      
       for (j = 0; j < ncols; j++) {
         cout << matrix [i][j] << " ";
       }
       cout << endl;
     }
 
+
+
+
+
     do {
       cout << "Elija una opción\n" 
            << "<0> Salir\n"
            << "<1> Invertir fila\n"
            << "<2> Invertir columna\n";
-      cout << ">"; cin >> selection;
-    } while (selection <0 || selection > 2);
+      cout << ">"; 
+      
+      cin >> selection;
+    } while (selection < 0 || selection > 2);
+
+
+
 
     if (selection != 0) {
 
       if (selection == 1) {
         int f, aux;
+
+
         do {
           cout << "Seleccione fila [1," << nrows << "]: ";
           cin >> f;
         } while (f < 1 || f > nrows);
         f--;
     
-    
+  
     // {13,12,11},
     // {21,22,23},
     // {31,32,33},
@@ -58,6 +72,8 @@ int main(void) {
     // matrix[f][j] = 13
     // maa        = aux
     //
+
+
         //Invertir fila
         for (j = 0; j <= (ncols-1) / 2; j++) {
           aux = matrix[f][j];
