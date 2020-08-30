@@ -21,6 +21,9 @@ void print(vector<int> vec) {
   cout << "} " << endl;
 }
 
+
+
+
 vector<int> paso(matrix &mat, int lado, int i, int j) {
   vector<int> res;
 
@@ -63,6 +66,7 @@ vector<int> paso(matrix &mat, int lado, int i, int j) {
       res.push_back(j);
     }
   }
+  
 
   mat[res[0]][res[1]] = 'X';
   ++res[0];

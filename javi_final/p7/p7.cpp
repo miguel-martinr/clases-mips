@@ -53,11 +53,8 @@ float div_by_two(int val) {
 
 
 
-
-
 float sum(matrix mat, int filas, int cols) {
   float res = 0;
-  
   for (int i = 0; i < filas; i++) 
     for (int j = 0; j < cols; j++) 
       res += div_by_two(mat[i][j]);

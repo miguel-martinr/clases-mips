@@ -104,12 +104,10 @@ blt $s1,$zero,do1
   jal printMat
 
 
-  #Llamamos a la funcion sum
   move $a1,$s2
   move $a2,$s0
   move $a3,$s1
   jal sum 
-
 
   #Imprimimos el resultado
   li $v0,4
@@ -119,10 +117,6 @@ blt $s1,$zero,do1
   li $v0,2
   mov.s $f12,$f0
   syscall
-
-  # li $a1,5
-  # jal div_by_two
-
 
 
 
@@ -138,12 +132,13 @@ syscall
 #Retorna
 #$f0 <- entero/2
 div_by_two:
-  mtc1 $a1,$f0 
+  mtc1 $a1,$f0
   cvt.s.w $f0,$f0
 
   li.s $f4,2.0
   div.s $f0,$f0,$f4
-  
+
+div_by_two_end:
 jr $ra
 
 
@@ -173,61 +168,39 @@ jr $ra
 #$s0 <- nFil*nCols
 #$s1 <- i
 #$s2 <- dirMatriz
-
-#var locales
-#$s0 <- i
-#$s1 <- j
-#$s2 <- dir de matriz 
-#$f20 <- contador
 sum:
-
-
-  #prologo
   addi $sp,-20
-  sw $ra,0($sp)
-  s.s $f20,4($sp)
-  sw $s0,8($sp)
-  sw $s1,12($sp)
-  sw $s2,16($sp)
-
-  move $s2,$a1
-
+  sw $s0,0($sp)
+  sw $s1,4($sp)
+  swc1 $f20,8($sp)
+  sw $s2,12($sp)
+  sw $ra,16($sp)
 
   li.s $f20,0.0
-  
-  li $s0,0
-  sum_for1:
-    bge $s0,$a2,sum_for1End
+  move $s2,$a1
+  mul $s0,$a2,$a3
+  move $s1,$zero
+  sumFor1:
+    bge $s1,$s0,sumFor1End
 
-    li $s1,0
-    sum_for2:
-      bge $s1,$a3,sum_for2End
+    lw $a1,0($s2)
+    jal div_by_two
 
-      lw $a1,0($s2)
-      jal div_by_two
-
-      add.s $f20,$f20,$f0 
-
-      addi $s2,4
-
-      addi $s1,1
-      j sum_for2
-    sum_for2End:
+    add.s $f20,$f20,$f0
     
-    addi $s0,1
-    j sum_for1
-  sum_for1End:
-
-
+    addi $s2,4
+    addi $s1,1
+    j sumFor1
+  sumFor1End:
 
   mov.s $f0,$f20
 
-  #epilogo
-  lw $ra,0($sp)
-  l.s $f20,4($sp)
-  lw $s0,8($sp)
-  lw $s1,12($sp)
-  lw $s2,16($sp)
+endsum:
+  lw $s0,0($sp)
+  lw $s1,4($sp)
+  lwc1 $f20,8($sp)
+  lw $s2,12($sp)
+  lw $ra,16($sp)
   addi $sp,20
 
 jr $ra
