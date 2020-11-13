@@ -53,4 +53,4 @@ Prácticas y material de apoyo para clases particulares de programación en MIPS
 
 
 
-![intro](#introduccion)
+[intro](#introduccion)
